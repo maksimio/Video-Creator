@@ -2,11 +2,11 @@ bl_info = {
     "name" : "videoCreator",
     "author" : "Lopatin M., Savin D., Gureeva I., Briushinin A.",  
     "blender" : (2, 80, 0),
-    "version" : (0, 2),
+    "version" : (1, 0),
     "location" : "View3D",
     "category" : "Animation",
     "description" : "This addon can create 3D animations based on special input data",
-    "wiki_url": "https://github.com/maksimio/Video-Creator/wiki"
+    "wiki_url": "https://github.com/maksimio/Video-Creator"
 }
 
 import bpy
