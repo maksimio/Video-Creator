@@ -1,5 +1,5 @@
 bl_info = {
-    "name" : "videoCreator",
+    "name" : "Video Creator",
     "author" : "Lopatin M., Savin D., Gureeva I., Briushinin A.",  
     "blender" : (2, 80, 0),
     "version" : (1, 0),

@@ -4,7 +4,7 @@ import bpy
 class Main_VC_Panel(bpy.types.Panel):
     bl_idname = "Main_VC_Panel"
     bl_label = "Video Creator"
-    bl_category = "videoCreator"
+    bl_category = "Video Creator"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
 
