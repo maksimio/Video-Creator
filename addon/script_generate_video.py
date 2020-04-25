@@ -129,10 +129,10 @@ def generate_video(input_filepath):
     counter = 1
     for i in list(bpy.data.scenes.keys()):
         a = i.split('.')
-        if (a[0] == 'videoCreator'):
+        if (a[0] == 'Video Creator'):
             counter +=1
     counter = str(counter)
-    bpy.context.window.scene = bpy.data.scenes.new(name='videoCreator.'+counter) 
+    bpy.context.window.scene = bpy.data.scenes.new(name='Video Creator.'+counter) 
     newCol = bpy.data.collections.new('Video_col.'+counter)
     bpy.context.window.scene.collection.children.link(newCol)
     # ------

@@ -70,7 +70,7 @@ class Render_Animation_Operator(bpy.types.Operator):
         bpy.context.scene.render.views["left"].file_suffix = ""
         bpy.context.scene.render.views["right"].file_suffix = ""
         if bpy.context.scene.render.filepath.endswith(path.sep):
-            bpy.context.scene.render.filepath += "videoCreator.mp4"
+            bpy.context.scene.render.filepath += "Video Creator.mp4"
         if not bpy.context.scene.render.filepath.endswith(".mp4"):
             bpy.context.scene.render.filepath += ".mp4"
 
