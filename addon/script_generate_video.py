@@ -1,23 +1,6 @@
 import bpy
 import json
 
-def interpolation_type(obj, inter_type = 'LINEAR'):
-    '''
-    Интерполяция (по стандарту - линейная)
-    '''
-    fc_loc = obj.animation_data.action.fcurves
-    for i in range(3):
-        fc_loc_i = fc_loc.find('location', index = i)
-        for keyframe in fc_loc_i.keyframe_points:
-            keyframe.interpolation = inter_type
-    fc_mat = bpy.data.materials[obj.name].node_tree.animation_data.action.fcurves
-    for i in range(4):
-        fc_mat_i = fc_mat[i]
-        for keyframe in fc_mat_i.keyframe_points:
-            keyframe.interpolation = inter_type
-    
-    return
-
 def add_object(name, verts, faces, edges=[], col_name='Video_col.1'):
     '''
     Добавление пользовательского объекта
@@ -89,6 +72,11 @@ def animated_material(obj, color, cur_frame):
         else:
             bpy.data.materials[obj.name].node_tree.nodes['Diffuse BSDF'].inputs[0].default_value = color
             bpy.data.materials[obj.name].node_tree.nodes['Diffuse BSDF'].inputs[0].keyframe_insert("default_value", frame= cur_frame)
+            #/\/\/\/\/\/\ Линейная Интерполяция /\/\/\/\/\/\/\/\/\/\/\/\
+            fc_mat = bpy.data.materials[obj.name].node_tree.animation_data.action.fcurves
+            for index in range(4):
+                fc_mat[index].keyframe_points[-1].interpolation = 'LINEAR'
+            #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/    
     else:
         new_material = bpy.data.materials.new( name= obj.name)
         new_material.use_nodes = True
@@ -102,6 +90,11 @@ def animated_material(obj, color, cur_frame):
         new_material.node_tree.links.new(diffuse_node.outputs[0], material_output.inputs[0])
         #bpy.context.object.active_material = new_material
         bpy.data.objects[obj.name].data.materials.append(bpy.data.materials[obj.name])
+        #/\/\/\/\/\/\ Линейная Интерполяция /\/\/\/\/\/\/\/\/\/\/\/\
+        fc_mat = new_material.node_tree.animation_data.action.fcurves
+        for index in range(4):
+            fc_mat[index].keyframe_points[-1].interpolation = 'LINEAR'
+        #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 def hide_object(obj, fr):
     '''
@@ -129,10 +122,10 @@ def generate_video(input_filepath, use_bezier):
     counter = 1
     for i in list(bpy.data.scenes.keys()):
         a = i.split('.')
-        if (a[0] == 'videoCreator'):
+        if (a[0] == 'Video Creator'):
             counter +=1
     counter = str(counter)
-    bpy.context.window.scene = bpy.data.scenes.new(name='videoCreator.'+counter) 
+    bpy.context.window.scene = bpy.data.scenes.new(name='Video Creator.'+counter) 
     newCol = bpy.data.collections.new('Video_col.'+counter)
     bpy.context.window.scene.collection.children.link(newCol)
     # ------
@@ -167,12 +160,18 @@ def generate_video(input_filepath, use_bezier):
             ob.rotation_euler.x = obj['rotation']['x']
             ob.rotation_euler.y = obj['rotation']['y']
             ob.rotation_euler.z = obj['rotation']['z']
+            ob.scale = (obj['scale'][0], obj['scale'][1], obj['scale'][2])
+            
+
             ob.keyframe_insert(data_path="location", frame=fr, index=-1)
             ob.keyframe_insert("rotation_euler", frame=fr)
-            ob.scale = (obj['scale'][0], obj['scale'][1], obj['scale'][2])
             ob.keyframe_insert("scale", frame=fr)
-            interpolation_type(ob) # Интерполяция
-        
+            #/\/\/\/\/\/\ Линейная Интерполяция /\/\/\/\/\/\/\/\/\/\/\/\
+            fc = ob.animation_data.action.fcurves
+            for index in range(2,11):
+                fc[index].keyframe_points[-1].interpolation = 'LINEAR'
+            #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+            
         set_be_now = set(be_now)
         set_be = set(be)
         hide_objects = set_be - set_be_now
