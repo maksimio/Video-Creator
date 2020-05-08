@@ -121,7 +121,7 @@ def uncover_object(obj, fr):
     obj.hide_render = False
     obj.keyframe_insert(data_path="hide_render", frame=fr)
 
-def generate_video(input_filepath):
+def generate_video(input_filepath, use_bezier):
     with open(input_filepath, 'r') as f:
         move = json.load(f)
 

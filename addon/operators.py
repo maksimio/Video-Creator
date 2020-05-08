@@ -1,6 +1,7 @@
 import bpy
 from os import path
 from . script_generate_video import generate_video
+from time import time
 
 
 class Scene_Properties(bpy.types.PropertyGroup):
@@ -33,6 +34,13 @@ class Scene_Properties(bpy.types.PropertyGroup):
         description="This is the main camera name",
         maxlen=64
     )
+
+    use_bezier: bpy.props.BoolProperty(
+        name="Use Bezier intrepolation",
+        description="By default it is linear. True - use Bezier interpolation, which is faster then linear",
+        default = False
+        )
+
 
 
 class Set_Camera_To_View_Operator(bpy.types.Operator):
@@ -92,7 +100,9 @@ class Video_Generation_Operator(bpy.types.Operator):
         # ---ГЕНЕРАЦИЯ ВИДЕО НА ОСНОВЕ ВХОДНЫХ ДАННЫХ---
         if not old_input_filepath.endswith('.json'):
             return {'FINISHED'}
-        frame_end = generate_video(old_input_filepath)
+        start = time()
+        frame_end = generate_video(old_input_filepath, context.scene.custom_props.use_bezier)
+        print('Time:', time() - start)
 
         # ---НАСТРОЙКИ ПО УМОЛЧАНИЮ---
         # Кастомные настройки + выходной путь
@@ -134,6 +144,8 @@ class Video_Generation_Operator(bpy.types.Operator):
         bpy.ops.view3d.camera_to_view_selected()
         bpy.ops.object.select_all(action='DESELECT')
         context.space_data.stereo_3d_camera = 'RIGHT'
+
+        
 
         # Добавление света на сцену
         bpy.ops.object.light_add(type='SUN')
