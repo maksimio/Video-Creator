@@ -1,7 +1,6 @@
 import bpy
 from os import path
 from . script_generate_video import generate_video
-from time import time
 
 
 class Scene_Properties(bpy.types.PropertyGroup):
@@ -38,9 +37,8 @@ class Scene_Properties(bpy.types.PropertyGroup):
     use_bezier: bpy.props.BoolProperty(
         name="Use Bezier intrepolation",
         description="By default it is linear. True - use Bezier interpolation, which is faster then linear",
-        default = False
-        )
-
+        default=False
+    )
 
 
 class Set_Camera_To_View_Operator(bpy.types.Operator):
@@ -51,6 +49,17 @@ class Set_Camera_To_View_Operator(bpy.types.Operator):
     def execute(self, context):
         try:  # Вылетит исключение, если нажать кнопку, при уже включенном виде из камеры
             bpy.ops.view3d.camera_to_view()
+
+            # Расчет и изменение расстояния сходимости:
+            camera_loc = bpy.context.scene.objects[context.scene.custom_props.main_camera_name].location
+            min_dist = float('inf')
+            for obj in bpy.context.scene.objects:
+                cur_dist = ((camera_loc[0] - obj.location[0]) ** 2 + (camera_loc[1] - obj.location[1]) ** 2 + (camera_loc[2] - obj.location[2]) ** 2) ** (1/2)
+                if cur_dist < min_dist and obj.name != context.scene.custom_props.main_camera_name and obj.name != context.scene.custom_props.main_light_name:
+                    min_dist = cur_dist
+        
+            bpy.data.objects[context.scene.custom_props.main_camera_name].data.stereo.convergence_distance = min_dist
+            bpy.data.objects[context.scene.custom_props.main_camera_name].data.stereo.interocular_distance = min_dist * 0.03
         except RuntimeError:  # Тогда просто выходим из этого режима
             bpy.ops.view3d.view_camera()
 
@@ -74,7 +83,7 @@ class Render_Animation_Operator(bpy.types.Operator):
 
     def execute(self, context):
         # Манипуляции с именем файла
-        bpy.context.scene.render.use_file_extension = False 
+        bpy.context.scene.render.use_file_extension = False
         bpy.context.scene.render.views["left"].file_suffix = ""
         bpy.context.scene.render.views["right"].file_suffix = ""
         if bpy.context.scene.render.filepath.endswith(path.sep):
@@ -100,9 +109,8 @@ class Video_Generation_Operator(bpy.types.Operator):
         # ---ГЕНЕРАЦИЯ ВИДЕО НА ОСНОВЕ ВХОДНЫХ ДАННЫХ---
         if not old_input_filepath.endswith('.json'):
             return {'FINISHED'}
-        start = time()
-        frame_end = generate_video(old_input_filepath, context.scene.custom_props.use_bezier)
-        print('Time:', time() - start)
+        frame_end = generate_video(
+            old_input_filepath, context.scene.custom_props.use_bezier)
 
         # ---НАСТРОЙКИ ПО УМОЛЧАНИЮ---
         # Кастомные настройки + выходной путь
@@ -145,7 +153,16 @@ class Video_Generation_Operator(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
         context.space_data.stereo_3d_camera = 'RIGHT'
 
+        camera_loc = bpy.context.scene.objects[context.scene.custom_props.main_camera_name].location
+        min_dist = float('inf')
+        for obj in bpy.context.scene.objects:
+            cur_dist = ((camera_loc[0] - obj.location[0]) ** 2 + (camera_loc[1] - obj.location[1]) ** 2 + (camera_loc[2] - obj.location[2]) ** 2) ** (1/2)
+            if cur_dist < min_dist and obj.name != context.scene.custom_props.main_camera_name:
+                min_dist = cur_dist
         
+        bpy.data.objects[context.scene.custom_props.main_camera_name].data.stereo.convergence_distance = min_dist
+        bpy.data.objects[context.scene.custom_props.main_camera_name].data.stereo.interocular_distance = min_dist * 0.03
+
 
         # Добавление света на сцену
         bpy.ops.object.light_add(type='SUN')
