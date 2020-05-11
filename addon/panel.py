@@ -20,8 +20,7 @@ class Main_VC_Panel(bpy.types.Panel):
         c_1.prop(context.scene.custom_props, 'input_filepath')
         c_1.separator(factor=0.2)
         
-        if context.scene.custom_props.set_timeline_status == 'Not set':
-            c_1.prop(context.scene.custom_props, 'use_bezier')
+        c_1.prop(context.scene.custom_props, 'use_bezier')
 
         s_r_c11_1 = c_1.row()
         ss_c_src11_1 = s_r_c11_1.row()
