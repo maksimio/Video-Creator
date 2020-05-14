@@ -118,6 +118,21 @@ def generate_video(input_filepath, use_bezier):
     with open(input_filepath, 'r') as f:
         move = json.load(f)
 
+    verts = [(1.0, 1.0, 0.0),
+             (1.0, 0.0, 0.0),
+             (0.0, 0.0, 0.0),
+             (0.0, 1.0, 0.0),
+             (1.0, 1.0, 1.0),
+             (1.0, 0.0, 1.0),
+             (0.0, 0.0, 1.0),
+             (0.0, 1.0, 1.0)]
+    faces = [(0, 1, 2, 3),
+             (4, 7, 6, 5),
+             (0, 4, 5, 1),
+             (1, 5, 6, 2),
+             (2, 6, 7, 3),
+             (4, 0, 3, 7)]
+
     # Создание сцены и объекта
     counter = 1
     for i in list(bpy.data.scenes.keys()):
@@ -138,7 +153,8 @@ def generate_video(input_filepath, use_bezier):
         for obj in time_frame['objects']:
             if obj['id'] not in be:
                 if obj['type'].lower() in basic_objects:
-                    ob = add_basic_object(obj, counter, col_name=newCol.name)
+                    ob = add_object(obj['id']+'.'+counter, verts, faces,
+                                    edges=[], col_name=newCol.name)
                 else:
                     ob = add_object(obj['id']+'.'+counter, obj['size']['verts'], obj['size']['faces'],
                                     edges=[], col_name=newCol.name)
