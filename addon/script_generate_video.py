@@ -150,7 +150,7 @@ def generate_video(input_filepath, use_bezier):
 
     # Расставляем объекты на сцене и прячем
     for time_frame in move:
-        for obj in time_frame['objects']:
+        for obj in time_frame['obj']:
             if obj['id'] not in be:
                 if obj['type'].lower() in basic_objects:
                     ob = add_object(obj['id']+'.'+counter, verts, faces,
@@ -165,17 +165,17 @@ def generate_video(input_filepath, use_bezier):
     for time_frame in move:
         fr = time_frame['cur_frame']
         be_now = [] # Список существующих объектов в данный момент
-        for obj in time_frame['objects']:
+        for obj in time_frame['obj']:
             ob = bpy.data.objects[obj['id']+'.'+counter]
             be_now.append(obj['id'])
 
             uncover_object(ob, fr)
-            animated_material(ob, obj['color'], fr)
+            animated_material(ob, obj['col'], fr)
 
-            ob.location = (obj['location']['x'], obj['location']['y'], obj['location']['z'])
-            ob.rotation_euler.x = obj['rotation']['x']
-            ob.rotation_euler.y = obj['rotation']['y']
-            ob.rotation_euler.z = obj['rotation']['z']
+            ob.location = (obj['loc'][0], obj['loc'][1], obj['loc'][2])
+            ob.rotation_euler.x = obj['rot'][0]
+            ob.rotation_euler.y = obj['rot'][1]
+            ob.rotation_euler.z = obj['rot'][2]
             ob.scale = (obj['scale'][0], obj['scale'][1], obj['scale'][2])
             
 
