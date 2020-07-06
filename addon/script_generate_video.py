@@ -13,20 +13,15 @@ def add_object(name, verts, faces, edges=[], col_name='Video_col.1'):
     mesh.from_pydata(verts, edges, faces)
     return obj
 
-def add_basic_object(obj, counter, col_name='Video_col.1'):
+def add_basic_object(obj, counter, verts, faces, edges=[], col_name='Video_col.1'):
     '''
     Добавление базового объекта
     '''
     if obj['type'].lower() == 'cube':
         # Добавляем куб
-        bpy.ops.mesh.primitive_cube_add(size=obj['size'], enter_editmode=False, location=(0, 0, 0))
-        bpy.context.active_object.name = obj['id']+'.'+counter
-        ob = bpy.data.objects[obj['id']+'.'+counter]
-        ob.data.name = obj['id']+'.'+counter
-        for obj in ob.users_collection[:]:
-            obj.objects.unlink(ob)
-        col = bpy.data.collections.get(col_name)
-        col.objects.link(ob)
+        #bpy.ops.mesh.primitive_cube_add(size=obj['size'], enter_editmode=False, location=(0, 0, 0))
+        ob = add_object(obj['id']+'.'+counter, verts, faces, edges, col_name)
+        
     elif obj['type'].lower() == 'parallelepiped': # Пока в разработке
         # Добавляем параллелепипед
         bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, location=(0, 0, 0))
@@ -114,7 +109,7 @@ def generate_video(input_filepath, use_bezier):
              (0, 4, 5, 1),
              (1, 5, 6, 2),
              (2, 6, 7, 3),
-             (4, 0, 3, 7)]
+             (4, 0, 3, 7)] 
 
     # Создание сцены и объекта
     counter = 1
@@ -136,8 +131,7 @@ def generate_video(input_filepath, use_bezier):
         for obj in time_frame['obj']:
             if obj['id'] not in be:
                 if obj['type'].lower() in basic_objects:
-                    ob = add_object(obj['id']+'.'+counter, verts, faces,
-                                    edges=[], col_name=newCol.name)
+                    ob = add_basic_object(obj, counter, verts, faces, edges=[], col_name=newCol.name)
                 else:
                     ob = add_object(obj['id']+'.'+counter, obj['size']['verts'], obj['size']['faces'],
                                     edges=[], col_name=newCol.name)
