@@ -28,10 +28,10 @@ def make_pix_frame(img_info, k_height):
             r, g, b = img_info['pixels'][x, y][0]/255, img_info['pixels'][x,y][1]/255, img_info['pixels'][x, y][2]/255
             
             objects[index]['id'] = 'Cube' + str(index) # Т.к. размер изобр. не меняется, то пиксели на одних и тех же позициях получат одинаковый id
-            objects[index]['color'] = [round(r, 2), round(g, 2), round(b, 2), 1]  # Округление для уменьшения размера json-файла
-            objects[index]['location'] = {'x': x_loc, 'y': y_loc, 'z': 0}
+            objects[index]['col'] = [round(r, 2), round(g, 2), round(b, 2), 1]  # Округление для уменьшения размера json-файла
+            objects[index]['loc'] = {'x': x_loc, 'y': y_loc, 'z': 0}
             objects[index]['scale'] = [1, 1, round((r*r+g*g+b*b) ** (1/2) * k_height, 2)]
-            objects[index]['rotation'] = {'x': 0, 'y': 0, 'z': 0}
+            objects[index]['rot'] = {'x': 0, 'y': 0, 'z': 0}
 
             x_loc += 1
 
