@@ -15,9 +15,14 @@ for object_text in bpy.data.scenes['Video Creator.1'].collection.all_objects[:]:
         new_font_curve = bpy.data.curves.new(type="FONT",name=object_text.name + '_curve')
         new_font_obj = bpy.data.objects.new(object_text.name + '_obj',new_font_curve)
         new_font_obj.data.body = object_text.name
-
-        new_font_obj.rotation_euler[0] = 1.5708
         
+        new_font_obj.scale[0] = 0.3
+        new_font_obj.scale[1] = 0.3
+        new_font_obj.scale[2] = 0.3
+        
+        bpy.ops.apply.transformlocrotscale(option='SCALE') #Возможно, надо включить в основной проект?!
+        
+        new_font_obj.rotation_euler[0] = 1.5708
         new_font_obj.location[0] = 0
         new_font_obj.location[0] = 0
         
@@ -33,8 +38,8 @@ for object_text in bpy.data.scenes['Video Creator.1'].collection.all_objects[:]:
         #bpy.context.collection.objects.link(new_font_obj)
 
         #new_font_obj.select_set(True)
-        #bpy.ops.object.convert(target='MESH') # Возможно, если не переводить текст в объект можно будет
-                                       # его изменять в течении анимации!
+        #bpy.ops.object.convert(target='MESH') # Если не переводить текст в объект можно будет
+                                               # его изменять в течении анимации!
 
         #bpy.ops.object.editmode_toggle() #Переключение с объектного режима в режим редактирования и наоборот
         
