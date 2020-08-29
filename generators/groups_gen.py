@@ -26,36 +26,35 @@ def make_frame(obj_type, amount_of_obj, fr):
     
     if fr != 0:
         for index in range(0,amount_of_obj,1):
-            objects[index]['loc'] = [randint(-10,10), randint(-10,10), randint(-10,50)]
+            objects[index]['loc'] = [randint(-10,10), randint(-10,10), randint(-10,50)] # Регулировать перемещение объектов - здесь
             objects[index]['scale'] = [randint(1,2), randint(1,2), randint(1,2)]   
     else:
         for z in range(1,length+1,2):
             for y in range(1,length+1,2):
                 for x in range(1,length+1,2):
                     
-                    objects[index]['loc'] = [x, y, z]
-                    #objects[index]['scale'] = [random(), random(), random()]
+                    objects[index]['loc'] = [x, y, z] 
                     objects[index]['scale'] = [1, 1, 1]
                     index +=1    
     return objects
 
 def make_anim(amount_of_frames, amount_of_obj, obj_type):
     frames = []
-    frame_step = 420 #60
+    frame_step = 420 # Частота ключевых кадров
     for fr in range(0,amount_of_frames,frame_step):
         frames.append({'cur_frame': fr, 'obj': make_frame(obj_type, amount_of_obj, fr)})
     return frames
 
 if __name__ == '__main__':
     
-    amount_of_frames = 3600
-    amount_of_objects = 64 #8,64,512,4096
-    object_type = 'cube' # "cube" - куб,"sphere" - сфера, "plane" - плоскость
+    amount_of_frames = 1000 #Количество кадров
+    amount_of_objects = 64 #Количество объектов (выбор из 8/64/512/4096)
+    object_type = 'cube' #Тип объектов (выбор из "cube" - куб,"sphere" - сфера, "plane" - плоскость)
 
     dirpath = join('jsonfiles')
     start = time()
     frames = make_anim(amount_of_frames, amount_of_objects, object_type)
     print('Frames ready -->', time() - start)
-    with open(join(dirpath, 'amount_of_obj_cube_64_fr3600.json'), 'w') as fout:
+    with open(join(dirpath, 'result.json'), 'w') as fout:
         dump(frames, fout)
     print('Dump ready -->', time() - start)
