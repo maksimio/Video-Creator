@@ -1,8 +1,8 @@
 bl_info = {
     "name" : "Video Creator",
     "author" : "Lopatin M., Savin D., Gureeva I., Briushinin A.",  
-    "blender" : (2, 80, 0),
-    "version" : (1, 0),
+    "blender" : (2, 83, 5),
+    "version" : (1, 1),
     "location" : "View3D",
     "category" : "Animation",
     "description" : "This addon can create 3D animations based on special input data",
@@ -10,7 +10,6 @@ bl_info = {
 }
 
 import bpy
-
 
 from .panel     import Main_VC_Panel 
 from .operators import Video_Generation_Operator, Scene_Properties
