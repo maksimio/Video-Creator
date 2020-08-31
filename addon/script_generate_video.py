@@ -45,7 +45,7 @@ def add_basic_object(obj, counter, edges=[], col_name='Video_col.1'):
     
     elif obj['type'].lower() == 'sphere':
         # Добавляем сферу
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=obj['scale'][0], enter_editmode=False, location=(0, 0, 0))
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=1, enter_editmode=False, location=(0, 0, 0))#radius=obj['size']
         bpy.context.active_object.name = obj['id']+'.'+counter
         bpy.ops.object.shade_smooth()
         ob = bpy.data.objects[obj['id']+'.'+counter]
