@@ -135,6 +135,8 @@ def generate_video(input_filepath, use_bezier):
             be_now.append(obj['id'])
 
             uncover_object(ob, fr)
+            if len(obj['col']) == 3:
+                obj['col'].append(1) # Автоматическое добавление прозрачности
             animated_material(ob, obj['col'], fr)
 
             ob.location = (obj['loc'][0], obj['loc'][1], obj['loc'][2])
@@ -159,9 +161,10 @@ def generate_video(input_filepath, use_bezier):
             ob.keyframe_insert("scale", frame=fr)
 
             #/\/\/\/\/\/\ Линейная Интерполяция (у всего кроме цвета!!!) /\/\/\/\/\/\/\/\/\/\/\/\
-            fc = ob.animation_data.action.fcurves
-            for index in range(2,11):
-                fc[index].keyframe_points[-1].interpolation = 'LINEAR'
+            if not use_bezier:
+                fc = ob.animation_data.action.fcurves
+                for index in range(2,11):
+                    fc[index].keyframe_points[-1].interpolation = 'LINEAR'
             #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
             
         set_be_now = set(be_now)
