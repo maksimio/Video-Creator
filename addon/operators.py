@@ -102,21 +102,22 @@ class Video_Generation_Operator(bpy.types.Operator):
     bl_description = "Make video based on input data file. Use after open file"
 
     def execute(self, context):
-        # Автовыставление путей с предыдущей сцены
+        # Автовыставление путей и чекбокса интерполяции с предыдущей сцены
         old_input_filepath = bpy.context.scene.custom_props.input_filepath
         old_output_path = context.scene.render.filepath
+        old_use_bezier = bpy.context.scene.custom_props.use_bezier
 
         # ---ГЕНЕРАЦИЯ ВИДЕО НА ОСНОВЕ ВХОДНЫХ ДАННЫХ---
         if not old_input_filepath.endswith('.json'):
             return {'FINISHED'}
-        frame_end = generate_video(
-            old_input_filepath, context.scene.custom_props.use_bezier)
+        frame_end = generate_video(old_input_filepath, context.scene.custom_props.use_bezier)
 
         # ---НАСТРОЙКИ ПО УМОЛЧАНИЮ---
         # Кастомные настройки + выходной путь
         context.scene.custom_props.set_timeline_status = "Set"
         context.scene.custom_props.input_filepath = old_input_filepath
         context.scene.render.filepath = old_output_path
+        bpy.context.scene.custom_props.use_bezier = old_use_bezier
 
         # Настройки рендера и окна предосмотра
         context.scene.render.engine = 'BLENDER_EEVEE'
