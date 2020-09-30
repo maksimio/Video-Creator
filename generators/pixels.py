@@ -17,8 +17,8 @@ def read_img(filepath):
 def make_pix_frame(img_info, k_height):
     '''Возвращает массив пикселей objects - 
     одно изображение для одного кадра'''
+    # Создание пустых шаблонов описаний под каждый куб-пиксель
     default = {'type': 'cube', 'size': 1}
-
     objects = [copy(default) for i in range(img_info['width']*img_info['height'])]
 
     x_loc, y_loc = 0.5, -0.5
@@ -29,9 +29,9 @@ def make_pix_frame(img_info, k_height):
             
             objects[index]['id'] = 'Cube' + str(index) # Т.к. размер изобр. не меняется, то пиксели на одних и тех же позициях получат одинаковый id
             objects[index]['col'] = [round(r, 2), round(g, 2), round(b, 2), 1]  # Округление для уменьшения размера json-файла
-            objects[index]['loc'] = {'x': x_loc, 'y': y_loc, 'z': 0}
-            objects[index]['scale'] = [1, 1, round((r*r+g*g+b*b) ** (1/2) * k_height, 2)]
-            objects[index]['rot'] = {'x': 0, 'y': 0, 'z': 0}
+            objects[index]['loc'] = [x_loc, y_loc, 0]
+            objects[index]['scale'] = [1, 1, round((r*r+g*g+b*b) ** (1/2) * k_height, 2)] # Здесь на позиции z можно установить любую другую функцию высоты от яркости пикселей
+            objects[index]['rot'] = [0, 0, 0]
 
             x_loc += 1
 
@@ -41,9 +41,10 @@ def make_pix_frame(img_info, k_height):
     return objects
 
 
-def make_pix_anim(filepaths, k_height=1):
+def make_pix_anim(filepaths, fr_step = 300, k_height=1):
     '''Возвращает массив кадров для аддона.
-    k_height - коэффициент изменения высоты.'''
+    fr_step - межкадровое расстояние
+    k_height - коэффициент высоты.'''
     # Чтение всех изображений
     images = [read_img(path) for path in filepaths]
 
@@ -56,22 +57,37 @@ def make_pix_anim(filepaths, k_height=1):
 
     # Создание кадров
     frames = []
-    fr_step = 300
     fr_nums = [i*fr_step for i in range(len(images))]
     for img, fr_num in zip(images, fr_nums):
-        frames.append({'cur_frame': fr_num, 'objects': make_pix_frame(img, k_height)})
+        frames.append({'cur_frame': fr_num, 'obj': make_pix_frame(img, k_height)})
 
     return frames
 
 
+# Мы запускаем скрипт, находясь в папке Video-Creator (важно для путей файлов)
 if __name__ == '__main__':
-    dirpath = join('generators', 'pixels', 'img_pix')
-    filepaths = [join(dirpath, '50x50polytech.jpg'),
-                 join(dirpath, '50x50mountains.jpg')]
+    dirpath = join('generators', 'pixels_inputdata') # Путь к изображениям при необходимости можно поправить
+    filepaths = [join(dirpath, '1.jpg'),
+                join(dirpath, '2.jpg'),
+                join(dirpath, '3.jpg'),
+                join(dirpath, '4.jpg'),
+                join(dirpath, '5.jpg'),
+                join(dirpath, '6.jpg'),
+                join(dirpath, '7.jpg'),
+                join(dirpath, '8.jpg'),
+                join(dirpath, '9.jpg'),
+                join(dirpath, '10.jpg'),
+                join(dirpath, '11.jpg'),
+                join(dirpath, '12.jpg'),
+                join(dirpath, '13.jpg'),
+                join(dirpath, '14.jpg'),
+                join(dirpath, '15.jpg')]
 
     start = time()
-    frames = make_pix_anim(filepaths, k_height=6)
-    print('Frames ready -->', time() - start)
-    with open(join(dirpath, 'result.json'), 'w') as fout:
+    frames = make_pix_anim(filepaths, fr_step=300, k_height=6)
+    print('Frames ready -->', round(time() - start, 3), 's')
+
+    # Запись файла в json-формате с помощью стандартных функций:
+    with open(join('jsonfiles', 'pixels_result.json'), 'w') as fout:
         dump(frames, fout)
-    print('Dump ready -->', time() - start)
+    print('Dump ready -->', round(time() - start, 3), ' s')

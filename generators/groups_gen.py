@@ -54,7 +54,7 @@ if __name__ == '__main__':
     dirpath = join('jsonfiles')
     start = time()
     frames = make_anim(amount_of_frames, amount_of_objects, object_type)
-    print('Frames ready -->', time() - start)
+    print('Frames ready -->', round(time() - start, 3), 's')
     with open(join(dirpath, 'result.json'), 'w') as fout:
         dump(frames, fout)
-    print('Dump ready -->', time() - start)
+    print('Dump ready -->', round(time() - start, 3), 's')

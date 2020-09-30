@@ -1,8 +1,8 @@
 bl_info = {
     "name" : "Video Creator",
     "author" : "Lopatin M., Savin D., Gureeva I., Briushinin A.",  
-    "blender" : (2, 83, 5),
-    "version" : (1, 1),
+    "blender" : (2, 90, 1),
+    "version" : (2, 0),
     "location" : "View3D",
     "category" : "Animation",
     "description" : "This addon can create 3D animations based on special input data",
