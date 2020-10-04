@@ -5,7 +5,7 @@ from time import time
 from random import random, randint
 
 def make_frame(obj_type, amount_of_obj, fr):
-    default = {'type': obj_type, 'size': 1}
+    default = {'type': obj_type}
     objects = [copy(default) for i in range(amount_of_obj)]
     
     if amount_of_obj == 8:
@@ -19,8 +19,8 @@ def make_frame(obj_type, amount_of_obj, fr):
 
     for index in range(0,amount_of_obj,1):
         objects[index]['id'] = obj_type + str(index)
-        objects[index]['col'] = [random(), random(), random(), random()]
-        objects[index]['rot'] = [random(), random(), random()]
+        objects[index]['col'] = [round(random(),2), round(random(),2), round(random(),2), round(random(),2)]
+        objects[index]['rot'] = [round(random(),2), round(random(),2), round(random(),2)]
 
     index = 0
     
@@ -40,21 +40,21 @@ def make_frame(obj_type, amount_of_obj, fr):
 
 def make_anim(amount_of_frames, amount_of_obj, obj_type):
     frames = []
-    frame_step = 420 # Частота ключевых кадров
+    frame_step = 420 # Шаг ключевых кадров
     for fr in range(0,amount_of_frames,frame_step):
         frames.append({'cur_frame': fr, 'obj': make_frame(obj_type, amount_of_obj, fr)})
     return frames
 
 if __name__ == '__main__':
     
-    amount_of_frames = 1000 #Количество кадров
-    amount_of_objects = 64 #Количество объектов (выбор из 8/64/512/4096)
-    object_type = 'cube' #Тип объектов (выбор из "cube" - куб,"sphere" - сфера, "plane" - плоскость)
+    amount_of_frames = 1000 # Количество кадров
+    amount_of_objects = 64 # Количество объектов (выбор из 8/64/512/4096)
+    object_type = 'cube' # Тип объектов (выбор из "cube" - куб,"sphere" - сфера, "plane" - плоскость)
 
     dirpath = join('jsonfiles')
     start = time()
     frames = make_anim(amount_of_frames, amount_of_objects, object_type)
     print('Frames ready -->', round(time() - start, 3), 's')
-    with open(join(dirpath, 'result.json'), 'w') as fout:
+    with open(join(dirpath, 'groups_result.json'), 'w') as fout:
         dump(frames, fout)
     print('Dump ready -->', round(time() - start, 3), 's')

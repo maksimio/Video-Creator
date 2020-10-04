@@ -18,7 +18,7 @@ def make_pix_frame(img_info, k_height):
     '''Возвращает массив пикселей objects - 
     одно изображение для одного кадра'''
     # Создание пустых шаблонов описаний под каждый куб-пиксель
-    default = {'type': 'cube', 'size': 1}
+    default = {'type': 'cube'}
     objects = [copy(default) for i in range(img_info['width']*img_info['height'])]
 
     x_loc, y_loc = 0.5, -0.5
