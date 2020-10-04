@@ -160,12 +160,12 @@ def generate_video(input_filepath, use_bezier):
             ob.keyframe_insert("rotation_euler", frame=fr)
             ob.keyframe_insert("scale", frame=fr)
 
-            #/\/\/\/\/\/\ Линейная Интерполяция (у всего кроме цвета!!!) /\/\/\/\/\/\/\/\/\/\/\/\
+            # -+-+-+-+- Линейная интерполяция (у всего кроме цвета!) -+-+-+-+-
             if not use_bezier:
                 fc = ob.animation_data.action.fcurves
                 for index in range(2,11):
                     fc[index].keyframe_points[-1].interpolation = 'LINEAR'
-            #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+            # -+-+-+-+-+-+-+-+-+-
             
         set_be_now = set(be_now)
         set_be = set(be)
